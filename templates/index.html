@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garbage Detection</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Garbage Detection</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" accept="image/*" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result">
+        <h2>Result:</h2>
+        <img id="resultImage" style="display:none;"/>
+        <pre id="predictions" style="display:none;"></pre>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(form);
+            const response = await fetch('/predict/', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const blob = await response.blob();
+            const img = document.getElementById('resultImage');
+            img.src = URL.createObjectURL(blob);
+            img.style.display = 'block';
+        };
+    </script>
+</body>
+</html>
