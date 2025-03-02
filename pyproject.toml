@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "myfastapiapp"
+version = "0.1.0"
+description = ""
+authors = ["huzaifa"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.110.0"
+uvicorn = "^0.27.0"
+opencv-python = "^4.8.0"
+numpy = "^1.26.0"
