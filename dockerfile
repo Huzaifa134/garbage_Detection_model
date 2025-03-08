@@ -22,4 +22,4 @@ RUN pip install poetry && poetry install --no-root
 COPY . .
 
 # Set the default command to run the FastAPI app
-CMD ["poetry", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
