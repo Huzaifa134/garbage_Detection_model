@@ -4,28 +4,31 @@ FROM python:3.12-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including build-essential for gcc
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    ffmpeg || \
-    (apt-get update && apt-get install -y \
-    mesa-utils \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libgl1 \
-    libxrender1 \
-    libsm6 \
-    libxext6 \
-    ffmpeg) && \
+    ffmpeg \
+    zlib1g-dev \
+    libjpeg62-turbo-dev \
+    build-essential && \
     rm -rf /var/lib/apt/lists/*
+
+# Install Poetry and configure pip with a longer timeout and a mirror
+RUN pip install --upgrade pip && \
+    pip config set global.timeout 300 && \
+    pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/ && \
+    pip install poetry
 
 # Copy project files
 COPY pyproject.toml ./
-RUN pip install poetry && poetry install --no-root
+
+# Install dependencies with retries
+RUN poetry config virtualenvs.create false && \
+    for i in 1 2 3; do poetry install --no-root && break || sleep 10; done
 
 # Copy the entire application
 COPY . .
