@@ -11,11 +11,20 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    ffmpeg && \
+    ffmpeg || \
+    (apt-get update && apt-get install -y \
+    mesa-utils \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libgl1 \
+    libxrender1 \
+    libsm6 \
+    libxext6 \
+    ffmpeg) && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy project files
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml ./
 RUN pip install poetry && poetry install --no-root
 
 # Copy the entire application
